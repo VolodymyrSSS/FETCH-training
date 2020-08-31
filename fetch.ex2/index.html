@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fetch Rainbow with Promises and async/await</title>
+  <style>
+    body {
+      background-color: #fa8072;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    img {
+      width: 50%;
+      height: auto;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      border: 2px solid #000080;
+      border-radius: 8px;
+      padding: 5px;
+    }
+
+    img:hover {
+      box-shadow: 0 0 2px 2px rgba(234, 239, 240, 0.5);
+      transform: scaleX(-1);
+    }
+  </style>
+</head>
+
+<body>
+  <h2>fetch() - Working With Data & APIs in JavaScript</h2>
+
+  <h3> This example is client-side only and covers the web fetch() API, loading image data and focusing on handling
+    asynchronous events with Promises (async/await)</h3>
+
+  <img src="" alt="rainbow_img" id="rainbow" />
+
+  <script>
+    console.log('about to fetch a rainbow');
+
+    // using fetch with pure Promises
+
+    // fetch('rainbow.jpg')
+    //   .then(response => {
+    //     console.log(response);
+    //     return response.blob();
+    //   })
+    //   .then(blob => {
+    //     console.log(blob);
+    //     document.getElementById('rainbow').src = URL.createObjectURL(blob);
+    //   })
+    //   .catch(error => {
+    //     console.log('Error..!');
+    //     console.error(error);
+    //   });
+
+    // using fetch with async/await
+    catchRainbow()
+      .then(response => {
+        console.log('yay');
+      })
+      .catch(error => {
+        console.log('Error..!');
+        console.error(error);
+      });
+
+    async function catchRainbow() {
+      const response = await fetch('rainbow.jpg');
+      const blob = await response.blob();
+      document.getElementById('rainbow').src = URL.createObjectURL(blob);
+    }
+  </script>
+  <!-- from: 'https://www.youtube.com/watch?v=tc8DU14qX6I' -->
+</body>
+
+</html>

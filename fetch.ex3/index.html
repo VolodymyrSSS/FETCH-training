@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fetch with CSV-comma separated values</title>
+  <style>
+    body {
+      background-color: seashell;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    img {
+      width: 50%;
+      height: auto;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      border: 2px solid #000080;
+      border-radius: 8px;
+      padding: 5px;
+    }
+
+    img:hover {
+      box-shadow: 0 0 2px 2px rgba(234, 239, 240, 0.5);
+      transform: scaleX(-1);
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+</head>
+
+<body>
+  <h2>Tabular Data - Working With Data & APIs in JavaScript</h2>
+
+  <h3> This example looks at loading and parsing a CSV file (comma-separated values) with
+    the web fetch() API.</h3>
+
+  <h4>Combined Land-Surface Air and Sea-Surface Water Temperature Anomalies (Land-Ocean Temperature Index, LOTI) - Zonal
+    annual means, 1880-present, updated through most recent complete year</h4>
+
+  <canvas id="chart" width="800" height="400"></canvas>
+
+  <script>
+    chartIt();
+
+    async function chartIt() {
+      const data = await getData();
+      const ctx = document.getElementById('chart').getContext('2d');
+      var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: data.xs,
+          datasets: [{
+            label: 'Combined Land-Surface Air and Sea-Surface Water Temperature in C°',
+            data: data.ys,
+            fill: false,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                // Include a degree sign in the ticks
+                callback: function (value, index, values) {
+                  return value + '°';
+                }
+              }
+            }]
+          }
+        }
+      });
+    }
+
+    async function getData() {
+      const xs = [];
+      const ys = [];
+      const response = await fetch('ZonAnn.Ts+dSST.csv');
+      const data = await response.text();
+
+      // створимо масив елементів які розділені рядками split('\n')
+      // і потім заберемо заголовок - як непотрібний перший елемент масиву
+      const table = data.split('\n').slice(1);
+      table.forEach(row => {
+        const columns = row.split(',');
+        const year = columns[0];
+        xs.push(year);
+        const temp = columns[1];
+        ys.push(parseFloat(temp) + 14);
+        console.log(year, temp);
+      });
+      return {
+        xs,
+        ys
+      }
+    }
+  </script>
+  <!-- Data from: 'https://data.giss.nasa.gov/gistemp/' -->
+  <!-- Mean from: 'https://earthobservatory.nasa.gov/world-of-/' -->
+</body>
+
+</html>
